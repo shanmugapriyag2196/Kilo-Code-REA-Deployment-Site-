@@ -7,7 +7,7 @@ export function isSafeRelativePath(p: string): boolean {
   if (p === '') return false
   if (p.includes('\0')) return false
   const normalized = normalize(p)
-  if (normalized.startsWith('..') || normalize(p).split('/').some((seg) => seg === '..')) {
+  if (normalized.startsWith('..') || normalized.split('/').some((seg) => seg === '..')) {
     return false
   }
   if (isAbsolute(normalized)) return false
@@ -16,7 +16,7 @@ export function isSafeRelativePath(p: string): boolean {
 
 export function assertSafeRelativePath(p: string): void {
   if (!isSafeRelativePath(p)) {
-    throw new Error(`Unsafe path detected: ${p}`)
+    throw new Error('Unsafe path detected: ' + p)
   }
 }
 
@@ -27,4 +27,10 @@ export function safeJoin(base: string, ...segments: string[]): string {
     throw new Error('Path traversal detected')
   }
   return target
+}
+
+export function isSafeUnder(base: string, target: string): boolean {
+  const baseResolved = resolve(base)
+  const targetResolved = resolve(target)
+  return targetResolved === baseResolved || targetResolved.startsWith(baseResolved + '/')
 }

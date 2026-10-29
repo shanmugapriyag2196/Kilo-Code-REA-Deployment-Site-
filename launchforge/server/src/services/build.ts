@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { spawn } from 'node:child_process'
 import { mkdirSync, rmSync, existsSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, isAbsolute } from 'node:path'
 import { getDb } from '../db'
 import { env, paths } from '../config'
 import { Project, Deployment, EnvVar } from '../types'
@@ -44,7 +44,7 @@ export class BuildService {
       throw new Error('Project source not found: ' + repoPath)
     }
 
-    const buildDir = safeJoin(repoPath, rootDir)
+    const buildDir = isAbsolute(repoPath) ? join(repoPath, rootDir) : safeJoin(repoPath, rootDir)
     if (!existsSync(buildDir)) {
       throw new Error('Project root directory not found: ' + buildDir)
     }
@@ -85,7 +85,7 @@ export class BuildService {
     const logsText = logs.join('\n')
 
     if (!failed) {
-      const outputPath = safeJoin(buildDir, outputDir)
+      const outputPath = isAbsolute(buildDir) ? join(buildDir, outputDir) : safeJoin(buildDir, outputDir)
       if (!existsSync(outputPath)) {
         throw new Error('Build output directory not found: ' + outputPath + '. Expected: ' + outputDir)
       }
