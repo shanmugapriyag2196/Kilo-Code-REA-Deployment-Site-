@@ -21,7 +21,7 @@ export interface CreateProjectOptions {
 export class ProjectService {
   private archive = new ArchiveService()
 
-  async create(options: CreateProjectOptions): Promise<Project> {
+async create(options: CreateProjectOptions): Promise<Project> {
     const db = getDb()
     const id = randomUUID()
     const slug = this.slugify(options.name)
@@ -33,13 +33,13 @@ export class ProjectService {
       name: options.name,
       slug,
       framework,
-      build_command: options.buildCommand ?? defaults.build_command,
-      install_command: options.installCommand ?? defaults.install_command,
-      output_dir: options.outputDir ?? defaults.output_dir,
-      root_dir: options.rootDir ?? '.',
-      repo_path: options.repoPath ?? null,
-      created_at: Date.now(),
-      updated_at: Date.now(),
+      buildCommand: options.buildCommand ?? defaults.buildCommand,
+      installCommand: options.installCommand ?? defaults.installCommand,
+      outputDir: options.outputDir ?? defaults.outputDir,
+      rootDir: options.rootDir ?? '.',
+      repoPath: options.repoPath ?? null,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
       settings: {},
     }
 
@@ -55,17 +55,33 @@ export class ProjectService {
       project.name,
       project.slug,
       project.framework,
-      project.build_command,
-      project.install_command,
-      project.output_dir,
-      project.root_dir,
-      project.repo_path,
-      project.created_at,
-      project.updated_at,
+      project.buildCommand,
+      project.installCommand,
+      project.outputDir,
+      project.rootDir,
+      project.repoPath,
+      project.createdAt,
+      project.updatedAt,
       JSON.stringify(project.settings)
     )
 
-    return project
+    console.log('DEBUG created project keys:', Object.keys(project))
+    console.log('DEBUG created project name:', project.name)
+    const result = {
+      id: project.id,
+      name: project.name,
+      slug: project.slug,
+      framework: project.framework,
+      buildCommand: project.buildCommand,
+      installCommand: project.installCommand,
+      outputDir: project.outputDir,
+      rootDir: project.rootDir,
+      repoPath: project.repoPath,
+      createdAt: project.createdAt,
+      updatedAt: project.updatedAt,
+      settings: project.settings,
+    }
+    return result
   }
 
   async importFromArchive(buffer: Buffer, options: { name?: string; rootDir?: string; buildCommand?: string; installCommand?: string; outputDir?: string }): Promise<Project> {
@@ -87,32 +103,47 @@ export class ProjectService {
 
   list(search?: string): Project[] {
     const db = getDb()
+    let rows
     if (search) {
-      return db.prepare('SELECT * FROM projects WHERE name LIKE ? ORDER BY created_at DESC').all(`%${search}%`) as Project[]
+      rows = db.prepare('SELECT * FROM projects WHERE name LIKE ? ORDER BY created_at DESC').all('%' + search + '%')
+    } else {
+      rows = db.prepare('SELECT * FROM projects ORDER BY created_at DESC').all()
     }
-    return db.prepare('SELECT * FROM projects ORDER BY created_at DESC').all() as Project[]
+    return (rows as any[]).map((r) => this.toCamel(r))
   }
 
   get(id: string): Project | null {
     const db = getDb()
-    return db.prepare('SELECT * FROM projects WHERE id = ?').get(id) as Project | null
+    const row = db.prepare('SELECT * FROM projects WHERE id = ?').get(id)
+    return row ? this.toCamel(row as any) : null
   }
 
   getBySlug(slug: string): Project | null {
     const db = getDb()
-    return db.prepare('SELECT * FROM projects WHERE slug = ?').get(slug) as Project | null
+    const row = db.prepare('SELECT * FROM projects WHERE slug = ?').get(slug)
+    return row ? this.toCamel(row as any) : null
   }
 
-  update(id: string, updates: Partial<Omit<Project, 'id' | 'created_at'>>): Project | null {
+  update(id: string, updates: Partial<Omit<Project, 'id' | 'createdAt'>>): Project | null {
     const db = getDb()
     const existing = this.get(id)
     if (!existing) return null
 
+    const snakeMap: Record<string, string> = {
+      buildCommand: 'build_command',
+      installCommand: 'install_command',
+      outputDir: 'output_dir',
+      rootDir: 'root_dir',
+      repoPath: 'repo_path',
+      createdAt: 'created_at',
+      updatedAt: 'updated_at',
+    }
     const fields: string[] = []
     const values: any[] = []
     for (const [key, value] of Object.entries(updates)) {
       if (value === undefined) continue
-      fields.push(`${key} = ?`)
+      const col = snakeMap[key] || key
+      fields.push(col + ' = ?')
       values.push(typeof value === 'object' ? JSON.stringify(value) : value)
     }
     if (fields.length === 0) return existing
@@ -120,7 +151,7 @@ export class ProjectService {
     values.push(Date.now())
     values.push(id)
 
-    db.prepare(`UPDATE projects SET ${fields.join(', ')} WHERE id = ?`).run(...values)
+    db.prepare('UPDATE projects SET ' + fields.join(', ') + ' WHERE id = ?').run(...values)
     return this.get(id)
   }
 
@@ -128,34 +159,52 @@ export class ProjectService {
     const db = getDb()
     const project = this.get(id)
     if (!project) return false
-    if (project.repo_path && existsSync(project.repo_path)) {
-      rmSync(project.repo_path, { recursive: true, force: true })
+    if (project.repoPath && existsSync(project.repoPath)) {
+      rmSync(project.repoPath, { recursive: true, force: true })
     }
     db.prepare('DELETE FROM projects WHERE id = ?').run(id)
     return true
+  }
+
+  private toCamel(row: any): Project {
+    return {
+      id: row.id,
+      name: row.name,
+      slug: row.slug,
+      framework: row.framework,
+      buildCommand: row.build_command,
+      installCommand: row.install_command,
+      outputDir: row.output_dir,
+      rootDir: row.root_dir,
+      repoPath: row.repo_path,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      settings: row.settings ? JSON.parse(row.settings) : {},
+    }
   }
 
   private async applyTemplate(project: Project, templateKey: string): Promise<void> {
     const { TemplateService } = await import('./templates')
     const templates = new TemplateService()
     const template = templates.get(templateKey)
-    if (!template) throw new Error(`Template not found: ${templateKey}`)
+    if (!template) throw new Error('Template not found: ' + templateKey)
     const targetDir = join(paths.root, 'repos', project.id)
     mkdirSync(targetDir, { recursive: true })
     await template.apply(targetDir)
-    project.repo_path = targetDir
+    project.repoPath = targetDir
     project.framework = template.framework
-    project.build_command = template.build_command
-    project.install_command = template.install_command
-    project.output_dir = template.output_dir
-    project.root_dir = '.'
+    project.buildCommand = template.build_command
+    project.installCommand = template.install_command
+    project.outputDir = template.output_dir
+    project.rootDir = '.'
   }
 
   private slugify(name: string): string {
-    return name
+    const base = name
       .toLowerCase()
       .trim()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '')
+    return base + '-' + randomUUID().slice(0, 8)
   }
 }

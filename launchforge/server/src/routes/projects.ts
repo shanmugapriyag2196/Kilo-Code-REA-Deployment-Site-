@@ -13,6 +13,7 @@ const CreateSchema = z.object({
   outputDir: z.string().optional(),
   rootDir: z.string().optional(),
   repoPath: z.string().optional(),
+  repo_path: z.string().optional(),
   template: z.string().optional(),
 })
 
@@ -37,13 +38,25 @@ router.get('/:id', (req, res) => {
   res.json({ project })
 })
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const parsed = CreateSchema.safeParse(req.body)
   if (!parsed.success) return res.status(400).json({ error: 'Invalid input', details: parsed.error.issues })
+  const data = parsed.data as any
+  const options = {
+    name: data.name,
+    framework: data.framework,
+    buildCommand: data.buildCommand,
+    installCommand: data.installCommand,
+    outputDir: data.outputDir,
+    rootDir: data.rootDir,
+    repoPath: data.repoPath || data.repo_path,
+    template: data.template,
+  }
   try {
-    const project = service.create(parsed.data as any)
+    const project = await service.create(options)
     res.status(201).json({ project })
   } catch (err: any) {
+    console.error('Create project error:', err)
     res.status(400).json({ error: err.message })
   }
 })

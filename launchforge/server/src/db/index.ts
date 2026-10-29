@@ -87,3 +87,65 @@ const migrate = (database: Database.Database): void => {
     CREATE INDEX IF NOT EXISTS idx_domains_project ON domains(project_id);
   `)
 }
+
+export const mapProject = (row: any): any => {
+  if (!row) return null
+  return {
+    id: row.id,
+    name: row.name,
+    slug: row.slug,
+    framework: row.framework,
+    build_command: row.build_command,
+    install_command: row.install_command,
+    output_dir: row.output_dir,
+    root_dir: row.root_dir,
+    repo_path: row.repo_path,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+    settings: row.settings ? JSON.parse(row.settings) : {},
+  }
+}
+
+export const mapDeployment = (row: any): any => {
+  if (!row) return null
+  return {
+    id: row.id,
+    project_id: row.project_id,
+    status: row.status,
+    build_command: row.build_command,
+    output_dir: row.output_dir,
+    source: row.source,
+    logs: row.logs,
+    exit_code: row.exit_code,
+    duration_ms: row.duration_ms,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+    preview_path: row.preview_path,
+  }
+}
+
+export const mapEnvVar = (row: any): any => {
+  if (!row) return null
+  return {
+    id: row.id,
+    project_id: row.project_id,
+    key: row.key,
+    value: row.value,
+    is_secret: Boolean(row.is_secret),
+    scope: row.scope,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+  }
+}
+
+export const mapDomain = (row: any): any => {
+  if (!row) return null
+  return {
+    id: row.id,
+    project_id: row.project_id,
+    name: row.name,
+    is_primary: Boolean(row.is_primary),
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+  }
+}

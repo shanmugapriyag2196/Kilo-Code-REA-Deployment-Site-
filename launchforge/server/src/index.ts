@@ -50,3 +50,5 @@ export function startServer(): Promise<express.Express> {
 }
 
 export default app
+
+startServer()

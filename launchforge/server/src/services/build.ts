@@ -34,19 +34,19 @@ export class BuildService {
     const deploymentId = randomUUID()
     const startedAt = Date.now()
     const logs: string[] = []
-    const repoPath = project.repo_path || join(paths.root, 'repos', project.id)
-    const outputDir = options.outputDir || project.output_dir || 'public'
-    const rootDir = options.rootDir || project.root_dir || '.'
-    const buildCommand = options.buildCommand ?? project.build_command
-    const installCommand = options.installCommand ?? project.install_command
+    const repoPath = project.repoPath || join(paths.root, 'repos', project.id)
+    const outputDir = options.outputDir || project.outputDir || 'public'
+    const rootDir = options.rootDir || project.rootDir || '.'
+    const buildCommand = options.buildCommand ?? project.buildCommand
+    const installCommand = options.installCommand ?? project.installCommand
 
     if (!existsSync(repoPath)) {
-      throw new Error(`Project source not found: ${repoPath}`)
+      throw new Error('Project source not found: ' + repoPath)
     }
 
     const buildDir = safeJoin(repoPath, rootDir)
     if (!existsSync(buildDir)) {
-      throw new Error(`Project root directory not found: ${buildDir}`)
+      throw new Error('Project root directory not found: ' + buildDir)
     }
 
     const deploymentDir = join(paths.deployDir, deploymentId)
@@ -64,7 +64,7 @@ export class BuildService {
     let failed = false
 
     if (installCommand) {
-      logs.push(`> ${installCommand}`)
+      logs.push('> ' + installCommand)
       const installResult = await this.runCommand(installCommand, buildDir, env, (options.timeoutMs ?? env.BUILD_TIMEOUT_MS) as number, logs)
       exitCode = installResult.exitCode
       if (exitCode !== 0) {
@@ -73,7 +73,7 @@ export class BuildService {
     }
 
     if (!failed && buildCommand) {
-      logs.push(`> ${buildCommand}`)
+      logs.push('> ' + buildCommand)
       const buildResult = await this.runCommand(buildCommand, buildDir, env, (options.timeoutMs ?? env.BUILD_TIMEOUT_MS) as number, logs)
       exitCode = buildResult.exitCode
       if (exitCode !== 0) {
@@ -87,7 +87,7 @@ export class BuildService {
     if (!failed) {
       const outputPath = safeJoin(buildDir, outputDir)
       if (!existsSync(outputPath)) {
-        throw new Error(`Build output directory not found: ${outputPath}. Expected: ${outputDir}`)
+        throw new Error('Build output directory not found: ' + outputPath + '. Expected: ' + outputDir)
       }
       await this.copyDir(outputPath, deploymentDir)
     } else {
@@ -120,6 +120,35 @@ export class BuildService {
       exitCode,
       durationMs,
       previewPath: failed ? undefined : deploymentDir,
+    }
+  }
+
+  list(projectId: string): Deployment[] {
+    const db = getDb()
+    const rows = db.prepare('SELECT * FROM deployments WHERE project_id = ? ORDER BY created_at DESC').all(projectId) as any[]
+    return rows.map((r) => this.toCamel(r))
+  }
+
+  get(id: string): Deployment | null {
+    const db = getDb()
+    const row = db.prepare('SELECT * FROM deployments WHERE id = ?').get(id)
+    return row ? this.toCamel(row as any) : null
+  }
+
+  private toCamel(row: any): Deployment {
+    return {
+      id: row.id,
+      projectId: row.project_id,
+      status: row.status,
+      buildCommand: row.build_command,
+      outputDir: row.output_dir,
+      source: row.source,
+      logs: row.logs,
+      exitCode: row.exit_code,
+      durationMs: row.duration_ms,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      previewPath: row.preview_path,
     }
   }
 
@@ -157,7 +186,7 @@ export class BuildService {
       proc.on('close', (code) => {
         clearTimeout(timer)
         if (timedOut) {
-          logs.push(`Build timed out after ${timeoutMs}ms`)
+          logs.push('Build timed out after ' + timeoutMs + 'ms')
           resolve({ exitCode: 124 })
         } else {
           resolve({ exitCode: code ?? 1 })

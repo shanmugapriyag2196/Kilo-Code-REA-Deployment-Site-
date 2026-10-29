@@ -21,14 +21,40 @@ router.get('/', (req, res) => {
   const rows = projectId
     ? db.prepare('SELECT * FROM deployments WHERE project_id = ? ORDER BY created_at DESC').all(projectId)
     : db.prepare('SELECT * FROM deployments ORDER BY created_at DESC LIMIT 100').all()
-  res.json({ deployments: rows })
+  res.json({ deployments: (rows as any[]).map((r) => ({
+    id: r.id,
+    projectId: r.project_id,
+    status: r.status,
+    buildCommand: r.build_command,
+    outputDir: r.output_dir,
+    source: r.source,
+    logs: r.logs,
+    exitCode: r.exit_code,
+    durationMs: r.duration_ms,
+    createdAt: r.created_at,
+    updatedAt: r.updated_at,
+    previewPath: r.preview_path,
+  })) })
 })
 
 router.get('/:id', (req, res) => {
   const db = getDb()
-  const row = db.prepare('SELECT * FROM deployments WHERE id = ?').get(req.params.id)
+  const row = db.prepare('SELECT * FROM deployments WHERE id = ?').get(req.params.id) as any
   if (!row) return res.status(404).json({ error: 'Deployment not found' })
-  res.json({ deployment: row })
+  res.json({ deployment: {
+    id: row.id,
+    projectId: row.project_id,
+    status: row.status,
+    buildCommand: row.build_command,
+    outputDir: row.output_dir,
+    source: row.source,
+    logs: row.logs,
+    exitCode: row.exit_code,
+    durationMs: row.duration_ms,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    previewPath: row.preview_path,
+  } })
 })
 
 router.post('/:projectId/deploy', async (req, res) => {

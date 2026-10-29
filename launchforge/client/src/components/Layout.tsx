@@ -22,7 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               L
             </div>
             <span className="font-semibold text-lg">LaunchForge</span>
-          </div>
+          </Link>
         </div>
         <nav className="flex-1 p-3 space-y-1">
           {nav.map((item) => {
