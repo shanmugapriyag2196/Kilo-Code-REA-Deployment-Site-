@@ -10,6 +10,8 @@ import domainsRouter from './routes/domains'
 import templatesRouter from './routes/templates'
 import analyticsRouter from './routes/analytics'
 import previewRouter from './routes/preview'
+import importRouter from './routes/import'
+import githubRouter from './routes/github'
 import { mkdirSync, existsSync } from 'node:fs'
 import { join, normalize, resolve } from 'node:path'
 
@@ -27,6 +29,8 @@ app.use('/api/domains', domainsRouter)
 app.use('/api/templates', templatesRouter)
 app.use('/api/analytics', analyticsRouter)
 app.use('/api/preview', previewRouter)
+app.use('/api/import', importRouter)
+app.use('/api/github', githubRouter)
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', env: env.NODE_ENV })
