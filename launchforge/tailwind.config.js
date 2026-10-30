@@ -5,21 +5,35 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        forge: {
-          50: '#f5f3ff',
-          100: '#ede9fe',
-          200: '#ddd6fe',
-          300: '#c4b5fd',
-          400: '#a78bfa',
-          500: '#8b5cf6',
-          600: '#7c3aed',
-          700: '#6d28d9',
-          800: '#5b21b6',
-          900: '#4c1d95',
-        },
+        bg: '#000000',
+        surface: '#0a0a0a',
+        'surface-2': '#111111',
+        border: '#222222',
+        'border-light': '#1a1a1a',
+        text: '#ffffff',
+        'text-dim': '#888888',
+        'text-muted': '#555555',
+        accent: '#ffffff',
+        'accent-dim': '#a3a3a3',
+        success: '#00ff88',
+        warning: '#ffb020',
+        error: '#ff3b3b',
+        info: '#00a3ff',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'SF Mono', 'monospace'],
+      },
+      fontSize: {
+        '2xs': ['10px', { lineHeight: '1.4' }],
+      },
+      spacing: {
+        '18': '4.5rem',
+        '22': '5.5rem',
+      },
+      borderRadius: {
+        DEFAULT: '8px',
+        lg: '12px',
       },
     },
   },

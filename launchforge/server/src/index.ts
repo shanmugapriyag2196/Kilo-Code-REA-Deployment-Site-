@@ -10,7 +10,8 @@ import domainsRouter from './routes/domains'
 import templatesRouter from './routes/templates'
 import analyticsRouter from './routes/analytics'
 import previewRouter from './routes/preview'
-import { mkdirSync } from 'node:fs'
+import { mkdirSync, existsSync } from 'node:fs'
+import { join, normalize, resolve } from 'node:path'
 
 const app = express()
 
@@ -30,6 +31,21 @@ app.use('/api/preview', previewRouter)
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', env: env.NODE_ENV })
 })
+
+// Serve built frontend
+const distDir = resolve(process.cwd(), 'client', 'dist')
+if (existsSync(distDir)) {
+  app.use(express.static(distDir, { maxAge: '1d', etag: true }))
+  // SPA fallback (must be after API routes and static)
+  app.get('*', (req, res) => {
+    const target = join(distDir, 'index.html')
+    if (existsSync(target)) {
+      res.setHeader('Content-Type', 'text/html; charset=utf-8')
+      res.setHeader('X-Content-Type-Options', 'nosniff')
+      res.sendFile(target)
+    }
+  })
+}
 
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error(err)
