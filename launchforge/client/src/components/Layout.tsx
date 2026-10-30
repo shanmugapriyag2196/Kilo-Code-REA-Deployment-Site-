@@ -1,7 +1,8 @@
 import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { cn } from '../lib/utils'
 import { useAuth } from '../lib/auth'
+import { Plus } from 'lucide-react'
 
 const nav = [
   { label: 'Overview', to: '/' },
@@ -11,6 +12,7 @@ const nav = [
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation()
+  const navigate = useNavigate()
   const { user, logout } = useAuth()
 
   return (
@@ -62,8 +64,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </h1>
             <p className="text-xs text-[var(--text-dim)]">Local deployment platform</p>
           </div>
-          <div className="text-xs text-[var(--text-dim)]">
-            Running on 127.0.0.1 only
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-[var(--text-dim)]">Running on 127.0.0.1 only</span>
+            <button
+              onClick={() => navigate('/projects/new')}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-white text-black rounded-md hover:bg-gray-200 transition font-medium"
+            >
+              <Plus size={14} />
+              New
+            </button>
           </div>
         </header>
         <div className="p-6">
