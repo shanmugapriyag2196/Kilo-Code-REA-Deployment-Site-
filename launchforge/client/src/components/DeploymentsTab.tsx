@@ -8,9 +8,11 @@ interface Props {
   projectId: string
   onToast: (t: { msg: string; type: 'success' | 'error' }) => void
   onDelete: (id: string) => void
+  onOpenInspector?: (deployment: any) => void
+  latestDeployment?: any
 }
 
-export function DeploymentsTab({ projectId, onToast, onDelete }: Props) {
+export function DeploymentsTab({ projectId, onToast, onDelete, onOpenInspector, latestDeployment }: Props) {
   const [showLogs, setShowLogs] = useState<string | null>(null)
   const qc = useQueryClient()
 
@@ -54,6 +56,37 @@ export function DeploymentsTab({ projectId, onToast, onDelete }: Props) {
         </div>
       ) : (
         <div className="space-y-3">
+          {latestDeployment && (
+            <div className="card p-4 border-white/20">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-3">
+                  <span className={statusBadge(latestDeployment.status) + ' text-xs px-2 py-0.5 rounded-full border'}>{latestDeployment.status}</span>
+                  <span className="text-[var(--text-dim)] text-xs">Latest</span>
+                  {latestDeployment.duration_ms && (
+                    <span className="text-[var(--text-dim)] text-xs">{formatDuration(latestDeployment.duration_ms)}</span>
+                  )}
+                </div>
+                <div className="flex gap-2">
+                  {latestDeployment.preview_path && latestDeployment.status === 'ready' && (
+                    <a
+                      href={`http://127.0.0.1:3001/api/preview/${latestDeployment.id}/`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs px-2 py-1 rounded bg-white/10 text-white hover:bg-white/20 flex items-center gap-1"
+                    >
+                      <Eye size={12} /> Preview
+                    </a>
+                  )}
+                  <button
+                    onClick={() => onOpenInspector?.(latestDeployment)}
+                    className="text-xs px-2 py-1 rounded bg-[var(--surface-2)] hover:bg-[var(--border)]"
+                  >
+                    Inspect
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
           {deployments.map((d: any) => (
             <div key={d.id} className="card p-4">
               <div className="flex items-center justify-between mb-2">
@@ -65,7 +98,7 @@ export function DeploymentsTab({ projectId, onToast, onDelete }: Props) {
                 <div className="flex gap-2">
                   {d.preview_path && d.status === 'ready' && (
                     <a
-                      href={`http://127.0.0.1:3100/api/preview/${d.id}/`}
+                      href={`http://127.0.0.1:3001/api/preview/${d.id}/`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs px-2 py-1 rounded bg-forge-500/10 text-forge-400 hover:bg-forge-500/20 flex items-center gap-1"
@@ -78,6 +111,12 @@ export function DeploymentsTab({ projectId, onToast, onDelete }: Props) {
                     className="text-xs px-2 py-1 rounded bg-[var(--surface-2)] hover:bg-[var(--border)]"
                   >
                     {showLogs === d.id ? 'Hide' : 'Logs'}
+                  </button>
+                  <button
+                    onClick={() => onOpenInspector?.(d)}
+                    className="text-xs px-2 py-1 rounded bg-[var(--surface-2)] hover:bg-[var(--border)]"
+                  >
+                    Inspect
                   </button>
                   <button
                     onClick={() => onDelete(d.id)}

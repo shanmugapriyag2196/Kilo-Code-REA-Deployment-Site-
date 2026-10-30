@@ -11,7 +11,7 @@ const GitHubSchema = z.object({
 })
 
 // Download a public GitHub repo as a zip and import it as a project.
-router.post('/github', async (req, res) => {
+router.post('/', async (req, res) => {
   const parsed = GitHubSchema.safeParse(req.body)
   if (!parsed.success) return res.status(400).json({ error: 'Invalid input', details: parsed.error.issues })
 
