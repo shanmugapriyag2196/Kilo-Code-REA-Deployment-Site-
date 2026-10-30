@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, Rocket, Globe, FileText, Settings as SettingsIcon, Copy, Check } from 'lucide-react'
 import { formatDate } from '../lib/utils'
@@ -10,6 +10,7 @@ import { DeploymentsTab } from '../components/DeploymentsTab'
 import { SettingsTab } from '../components/SettingsTab'
 import { EnvTab } from '../components/EnvTab'
 import { DomainsTab } from '../components/DomainsTab'
+import { DeploymentInspector } from '../components/DeploymentInspector'
 import { api } from '../lib/api'
 
 const TABS = [
@@ -26,18 +27,38 @@ export default function ProjectDetail() {
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null)
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+  const [inspector, setInspector] = useState<{ project: any; deployment: any } | null>(null)
 
   const { data: projectData, isLoading } = useQuery({
     queryKey: ['project', id],
     queryFn: () => api.get(`/projects/${id}`),
   })
 
+  const { data: depsData } = useQuery({
+    queryKey: ['deployments', id],
+    queryFn: () => api.get(`/deployments?project_id=${id}`),
+  })
+
   const project = projectData?.project
+  const deployments = depsData?.deployments || []
+  const latestDeployment = deployments[0]
+
+  const deployMutation = useMutation({
+    mutationFn: () => api.post(`/deployments/${id}/deploy`, {}),
+    onSuccess: (r: any) => {
+      setToast({ msg: `Deployment ${r.status}`, type: r.status === 'ready' ? 'success' : 'error' })
+    },
+    onError: (e: any) => setToast({ msg: e.message, type: 'error' }),
+  })
 
   const handleCopyUrl = () => {
     navigator.clipboard.writeText(window.location.href)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+  }
+
+  const handleOpenInspector = (dep: any) => {
+    setInspector({ project, deployment: dep })
   }
 
   if (isLoading) return <div className="text-[var(--text-dim)]">Loading project...</div>
@@ -71,7 +92,7 @@ export default function ProjectDetail() {
               className={cn(
                 'flex items-center gap-2 px-4 py-2 text-sm border-b-2 -mb-px whitespace-nowrap transition',
                 activeTab === tab.id
-                  ? 'border-forge-500 text-forge-400'
+                  ? 'border-white text-white'
                   : 'border-transparent text-[var(--text-dim)] hover:text-[var(--text)]'
               )}
             >
@@ -81,10 +102,26 @@ export default function ProjectDetail() {
         })}
       </div>
 
-      {activeTab === 'deployments' && <DeploymentsTab projectId={id!} onToast={setToast} onDelete={setDeleteId} />}
+      {activeTab === 'deployments' && (
+        <DeploymentsTab
+          projectId={id!}
+          onToast={setToast}
+          onDelete={setDeleteId}
+          onOpenInspector={handleOpenInspector}
+          latestDeployment={latestDeployment}
+        />
+      )}
       {activeTab === 'settings' && <SettingsTab projectId={id!} project={project} onToast={setToast} />}
       {activeTab === 'env' && <EnvTab projectId={id!} onToast={setToast} />}
       {activeTab === 'domains' && <DomainsTab projectId={id!} onToast={setToast} />}
+
+      <DeploymentInspector
+        open={inspector !== null}
+        project={inspector?.project}
+        deployment={inspector?.deployment}
+        onClose={() => setInspector(null)}
+        onRedeploy={(pid) => deployMutation.mutate()}
+      />
 
       <ConfirmDialog
         open={deleteId !== null}
