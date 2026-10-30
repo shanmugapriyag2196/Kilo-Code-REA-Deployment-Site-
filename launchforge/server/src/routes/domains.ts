@@ -18,7 +18,7 @@ router.post('/:projectId', (req, res) => {
   const parsed = CreateSchema.safeParse(req.body)
   if (!parsed.success) return res.status(400).json({ error: 'Invalid input', details: parsed.error.issues })
   try {
-    const domain = service.create(req.params.projectId, { name: parsed.data.name, is_primary: parsed.data.is_primary })
+    const domain = service.create(req.params.projectId, { name: parsed.data.name, isPrimary: parsed.data.is_primary })
     res.status(201).json({ domain })
   } catch (err: any) {
     res.status(400).json({ error: err.message })

@@ -65,8 +65,6 @@ async create(options: CreateProjectOptions): Promise<Project> {
       JSON.stringify(project.settings)
     )
 
-    console.log('DEBUG created project keys:', Object.keys(project))
-    console.log('DEBUG created project name:', project.name)
     const result = {
       id: project.id,
       name: project.name,

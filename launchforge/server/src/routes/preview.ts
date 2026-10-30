@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { existsSync, createReadStream, statSync } from 'node:fs'
+import { existsSync, createReadStream } from 'node:fs'
 import { join, normalize } from 'node:path'
 import { getDb } from '../db'
 import { PreviewService } from '../services/preview'
@@ -7,7 +7,7 @@ import { PreviewService } from '../services/preview'
 const router = Router()
 const preview = new PreviewService()
 
-router.get('/:deploymentId/:path*', (req, res) => {
+function servePreview(req: any, res: any): void {
   const db = getDb()
   const row = db.prepare('SELECT preview_path FROM deployments WHERE id = ?').get(req.params.deploymentId) as { preview_path: string } | undefined
   if (!row || !row.preview_path) {
@@ -25,6 +25,9 @@ router.get('/:deploymentId/:path*', (req, res) => {
   res.setHeader('Content-Type', resolved.mime)
   res.setHeader('X-Content-Type-Options', 'nosniff')
   createReadStream(resolved.filePath).pipe(res)
-})
+}
+
+router.get('/:deploymentId', servePreview)
+router.get('/:deploymentId/:path*', servePreview)
 
 export default router

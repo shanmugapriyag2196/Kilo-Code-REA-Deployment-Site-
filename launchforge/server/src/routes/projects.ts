@@ -56,7 +56,6 @@ router.post('/', async (req, res) => {
     const project = await service.create(options)
     res.status(201).json({ project })
   } catch (err: any) {
-    console.error('Create project error:', err)
     res.status(400).json({ error: err.message })
   }
 })
