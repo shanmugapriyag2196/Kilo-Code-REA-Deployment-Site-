@@ -1,0 +1,7 @@
+{
+  "buildCommand": "cd launchforge && npm run build",
+  "outputDirectory": "launchforge/client/dist",
+  "installCommand": "cd launchforge && npm install",
+  "devCommand": "cd launchforge && npm run dev",
+  "framework": "vite"
+}
