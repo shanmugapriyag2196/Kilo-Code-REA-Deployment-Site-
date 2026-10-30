@@ -1,7 +1,6 @@
 {
-  "buildCommand": "npm run build --prefix launchforge",
-  "outputDirectory": "launchforge/client/dist",
-  "installCommand": "npm install --prefix launchforge",
-  "devCommand": "npm run dev --prefix launchforge",
+  "buildCommand": "npm run build",
+  "outputDirectory": "client/dist",
+  "installCommand": "npm install",
   "framework": "vite"
 }
