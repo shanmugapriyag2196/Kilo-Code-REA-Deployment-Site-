@@ -33,7 +33,7 @@ export default function Templates() {
   return (
     <div className="page-enter">
       <div className="mb-8">
-        <h2 className="text-3xl font-bold tracking-tight text-white">Create New</h2>
+        <h2 className="text-3xl font-bold tracking-tight text-white">Templates</h2>
         <p className="text-sm text-[#888888] mt-1">Choose a template or import from Git</p>
       </div>
 
