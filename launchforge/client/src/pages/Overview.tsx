@@ -30,13 +30,6 @@ export default function Overview() {
           <h2 className="text-2xl font-bold text-white">Overview</h2>
           <p className="text-[#888888] text-sm">Your deployment activity</p>
         </div>
-        <Link
-          to="/templates"
-          className="flex items-center gap-2 bg-white text-black hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition"
-        >
-          <Plus size={16} />
-          Create New
-        </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
