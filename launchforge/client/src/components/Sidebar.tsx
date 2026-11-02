@@ -4,11 +4,15 @@ import { useToast } from './ToastProvider'
 import {
   LayoutGrid, FolderOpen, BarChart3, Globe, Cpu, Settings,
   User, LogOut, ChevronDown, Activity, Zap, Shield, Code2,
+  Rocket, Terminal, FileText,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
   { label: 'Overview', to: '/', icon: LayoutGrid },
   { label: 'Projects', to: '/projects', icon: FolderOpen },
+  { label: 'Deployment', to: '/deployments', icon: Rocket },
+  { label: 'Logs', to: '/logs', icon: Terminal },
+  { label: 'Environment Variable', to: '/env-vars', icon: FileText },
   { label: 'Analytics', to: '/analytics', icon: BarChart3 },
   { label: 'Domains', to: '/domains', icon: Globe },
   { label: 'Usage & Billing', to: '/usage', icon: Cpu },
@@ -29,7 +33,6 @@ export function Sidebar() {
 
   return (
     <aside className="w-64 h-screen bg-black border-r border-[#222222] flex flex-col fixed left-0 top-0 z-30">
-      {/* Logo */}
       <div className="p-4 border-b border-[#222222]">
         <Link to="/" className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center">
@@ -39,7 +42,6 @@ export function Sidebar() {
         </Link>
       </div>
 
-      {/* Navigation */}
       <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon
@@ -64,7 +66,6 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Bottom - Account */}
       <div className="p-3 border-t border-[#222222]">
         <button
           onClick={() => setShowSignOut(true)}

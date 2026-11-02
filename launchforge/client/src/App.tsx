@@ -12,6 +12,9 @@ import Analytics from './pages/Analytics'
 import Domains from './pages/Domains'
 import Usage from './pages/Usage'
 import Settings from './pages/Settings'
+import Deployments from './pages/Deployments'
+import Logs from './pages/Logs'
+import EnvVars from './pages/EnvVars'
 import './index.css'
 
 const queryClient = new QueryClient({
@@ -32,6 +35,9 @@ function App() {
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/projects/new" element={<NewProject />} />
                 <Route path="/projects/:id" element={<ProjectDetail />} />
+                <Route path="/deployments" element={<Deployments />} />
+                <Route path="/logs" element={<Logs />} />
+                <Route path="/env-vars" element={<EnvVars />} />
                 <Route path="/analytics" element={<Analytics />} />
                 <Route path="/domains" element={<Domains />} />
                 <Route path="/usage" element={<Usage />} />
