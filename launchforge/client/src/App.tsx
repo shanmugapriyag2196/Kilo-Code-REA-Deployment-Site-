@@ -16,6 +16,11 @@ import Deployments from './pages/Deployments'
 import Logs from './pages/Logs'
 import EnvVars from './pages/EnvVars'
 import Templates from './pages/Templates'
+import Storage from './pages/Storage'
+import Integrations from './pages/Integrations'
+import Observability from './pages/Observability'
+import Team from './pages/Team'
+import Billing from './pages/Billing'
 import './index.css'
 
 const queryClient = new QueryClient({
@@ -42,6 +47,11 @@ function App() {
                 <Route path="/env-vars" element={<EnvVars />} />
                 <Route path="/analytics" element={<Analytics />} />
                 <Route path="/domains" element={<Domains />} />
+                <Route path="/storage" element={<Storage />} />
+                <Route path="/integrations" element={<Integrations />} />
+                <Route path="/observability" element={<Observability />} />
+                <Route path="/team" element={<Team />} />
+                <Route path="/billing" element={<Billing />} />
                 <Route path="/usage" element={<Usage />} />
                 <Route path="/settings" element={<Settings />} />
               </Route>

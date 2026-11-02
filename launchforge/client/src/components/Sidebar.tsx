@@ -4,19 +4,27 @@ import { useToast } from './ToastProvider'
 import {
   LayoutGrid, FolderOpen, BarChart3, Globe, Cpu, Settings,
   User, LogOut, ChevronDown, Activity, Zap, Shield, Code2,
-  Rocket, Terminal, FileText, Layout,
+  Rocket, Terminal, FileText, Layout, HardDrive, Plug, Database,
+  Server, Users, CreditCard, BookOpen,
 } from 'lucide-react'
 
-const NAV_ITEMS = [
+const MAIN_NAV = [
   { label: 'Overview', to: '/', icon: LayoutGrid },
   { label: 'Projects', to: '/projects', icon: FolderOpen },
+  { label: 'Deployments', to: '/deployments', icon: Rocket },
   { label: 'Templates', to: '/templates', icon: Layout },
-  { label: 'Deployment', to: '/deployments', icon: Rocket },
-  { label: 'Logs', to: '/logs', icon: Terminal },
-  { label: 'Environment Variable', to: '/env-vars', icon: FileText },
-  { label: 'Analytics', to: '/analytics', icon: BarChart3 },
+  { label: 'Storage', to: '/storage', icon: HardDrive },
+  { label: 'Integrations', to: '/integrations', icon: Plug },
   { label: 'Domains', to: '/domains', icon: Globe },
-  { label: 'Usage & Billing', to: '/usage', icon: Cpu },
+  { label: 'Observability', to: '/observability', icon: Server },
+  { label: 'Logs', to: '/logs', icon: Terminal },
+  { label: 'Analytics', to: '/analytics', icon: BarChart3 },
+]
+
+const CONFIG_NAV = [
+  { label: 'Environment Variables', to: '/env-vars', icon: FileText },
+  { label: 'Team', to: '/team', icon: Users },
+  { label: 'Billing', to: '/billing', icon: CreditCard },
   { label: 'Settings', to: '/settings', icon: Settings },
 ]
 
@@ -43,28 +51,64 @@ export function Sidebar() {
         </Link>
       </div>
 
-      <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
-        {NAV_ITEMS.map((item) => {
-          const Icon = item.icon
-          const active = location.pathname === item.to
-          return (
-            <Link
-              key={item.to}
-              to={item.to}
-              className={`
-                flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all duration-150
-                ${active
-                  ? 'bg-[#111111] text-white'
-                  : 'text-[#888888] hover:text-white hover:bg-[#0f0f0f]'
-                }
-              `}
-            >
-              <Icon size={16} className={active ? 'text-white' : 'text-[#555555]'} />
-              {item.label}
-              {active && <span className="ml-auto w-1 h-4 rounded-full bg-white" />}
-            </Link>
-          )
-        })}
+      <nav className="flex-1 p-3 space-y-4 overflow-y-auto">
+        <div>
+          <div className="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#555555]">
+            Main navigation
+          </div>
+          <div className="space-y-0.5 mt-1">
+            {MAIN_NAV.map((item) => {
+              const Icon = item.icon
+              const active = location.pathname === item.to
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className={`
+                    flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all duration-150
+                    ${active
+                      ? 'bg-[#111111] text-white'
+                      : 'text-[#888888] hover:text-white hover:bg-[#0f0f0f]'
+                    }
+                  `}
+                >
+                  <Icon size={16} className={active ? 'text-white' : 'text-[#555555]'} />
+                  {item.label}
+                  {active && <span className="ml-auto w-1 h-4 rounded-full bg-white" />}
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+
+        <div>
+          <div className="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#555555]">
+            Configuration
+          </div>
+          <div className="space-y-0.5 mt-1">
+            {CONFIG_NAV.map((item) => {
+              const Icon = item.icon
+              const active = location.pathname === item.to
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className={`
+                    flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all duration-150
+                    ${active
+                      ? 'bg-[#111111] text-white'
+                      : 'text-[#888888] hover:text-white hover:bg-[#0f0f0f]'
+                    }
+                  `}
+                >
+                  <Icon size={16} className={active ? 'text-white' : 'text-[#555555]'} />
+                  {item.label}
+                  {active && <span className="ml-auto w-1 h-4 rounded-full bg-white" />}
+                </Link>
+              )
+            })}
+          </div>
+        </div>
       </nav>
 
       <div className="p-3 border-t border-[#222222]">
