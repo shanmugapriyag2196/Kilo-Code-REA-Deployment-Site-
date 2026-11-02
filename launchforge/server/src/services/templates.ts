@@ -114,6 +114,13 @@ export class TemplateService {
     return [
       { key: 'static', name: 'Static HTML', description: 'Plain static website', framework: 'static', build_command: null, install_command: null, output_dir: 'public' },
       { key: 'vite-react', name: 'Vite + React', description: 'React app with Vite', framework: 'vite', build_command: 'npm run build', install_command: 'npm install', output_dir: 'dist' },
+      { key: 'nextjs', name: 'Next.js Boilerplate', description: 'Get started with Next.js and React in seconds', framework: 'next', build_command: 'npm run build', install_command: 'npm install', output_dir: 'out' },
+      { key: 'flask', name: 'Flask Python Boilerplate', description: 'Deploy Python Flask applications with zero configuration', framework: 'node', build_command: null, install_command: 'pip install -r requirements.txt', output_dir: 'public' },
+      { key: 'agent', name: 'Build an agent', description: 'Deploy an agent in a minute on Vercel', framework: 'vite', build_command: 'npm run build', install_command: 'npm install', output_dir: 'dist' },
+      { key: 'ticket-router', name: 'Ticket router with Jev', description: 'Route ticket submissions by context using Jev and AI SDK', framework: 'vite', build_command: 'npm run build', install_command: 'npm install', output_dir: 'dist' },
+      { key: 'analytics', name: 'Web Analytics', description: 'Track page views, events, and performance metrics', framework: 'vite', build_command: 'npm run build', install_command: 'npm install', output_dir: 'dist' },
+      { key: 'speed-insights', name: 'Speed Insights', description: 'Monitor Core Web Vitals and real user metrics', framework: 'vite', build_command: 'npm run build', install_command: 'npm install', output_dir: 'dist' },
+      { key: 'empty', name: 'Empty project', description: 'Start from a blank canvas', framework: 'static', build_command: null, install_command: null, output_dir: 'public' },
     ]
   }
 

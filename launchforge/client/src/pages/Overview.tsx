@@ -2,7 +2,7 @@ import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../lib/api'
 import { Link } from 'react-router-dom'
-import { Plus, Folder, Rocket, Activity, TrendingUp, Clock } from 'lucide-react'
+import { Plus, Folder, Rocket, Activity, TrendingUp, Clock, Eye, Zap, Layout, Code2, FileText, Cpu, FlaskConical, Bot } from 'lucide-react'
 import { statusBadge, formatDate, formatDuration } from '../lib/utils'
 
 export default function Overview() {
@@ -20,7 +20,7 @@ export default function Overview() {
   const a = analytics
 
   if (isLoading) {
-    return <div className="text-[var(--text-dim)]">Loading...</div>
+    return <div className="text-[#888888]">Loading...</div>
   }
 
   return (
@@ -31,11 +31,11 @@ export default function Overview() {
           <p className="text-[#888888] text-sm">Your deployment activity</p>
         </div>
         <Link
-          to="/projects/new"
+          to="/templates"
           className="flex items-center gap-2 bg-white text-black hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition"
         >
           <Plus size={16} />
-          New Project
+          Create New
         </Link>
       </div>
 
@@ -102,7 +102,7 @@ export default function Overview() {
           )}
         </div>
         <div className="card p-4">
-          <h3 className="font-semibold mb-4 text-white">Recent Projects</h3>
+          <h3 className="font-semibold mb-4 text-white">Projects</h3>
           {projects.length > 0 ? (
             <div className="space-y-2">
               {projects.slice(0, 5).map((p) => (
@@ -116,7 +116,7 @@ export default function Overview() {
             <div className="text-center py-8 text-[#888888]">
               <Folder size={32} className="mx-auto mb-2 opacity-50" />
               <p>No projects yet</p>
-              <Link to="/projects/new" className="text-white text-xs hover:underline">Create one →</Link>
+              <Link to="/templates" className="text-white text-xs hover:underline">Create one →</Link>
             </div>
           )}
         </div>

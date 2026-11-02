@@ -44,7 +44,11 @@ async create(options: CreateProjectOptions): Promise<Project> {
     }
 
     if (options.template) {
-      await this.applyTemplate(project, options.template)
+      try {
+        await this.applyTemplate(project, options.template)
+      } catch {
+        // Unknown or unsupported template — create as a basic project
+      }
     }
 
     db.prepare(`

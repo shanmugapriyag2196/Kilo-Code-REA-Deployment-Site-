@@ -4,12 +4,13 @@ import { useToast } from './ToastProvider'
 import {
   LayoutGrid, FolderOpen, BarChart3, Globe, Cpu, Settings,
   User, LogOut, ChevronDown, Activity, Zap, Shield, Code2,
-  Rocket, Terminal, FileText,
+  Rocket, Terminal, FileText, Layout,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
   { label: 'Overview', to: '/', icon: LayoutGrid },
   { label: 'Projects', to: '/projects', icon: FolderOpen },
+  { label: 'Templates', to: '/templates', icon: Layout },
   { label: 'Deployment', to: '/deployments', icon: Rocket },
   { label: 'Logs', to: '/logs', icon: Terminal },
   { label: 'Environment Variable', to: '/env-vars', icon: FileText },
@@ -38,7 +39,7 @@ export function Sidebar() {
           <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center">
             <Code2 size={18} className="text-black" />
           </div>
-          <span className="font-semibold text-lg tracking-tight">LaunchForge</span>
+          <span className="font-semibold text-lg tracking-tight">VG Deployment App</span>
         </Link>
       </div>
 

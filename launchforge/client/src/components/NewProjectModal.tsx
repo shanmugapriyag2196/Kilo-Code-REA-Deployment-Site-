@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useToast } from './ToastProvider'
-import { X, Plus, Globe, Layout, FolderOpen, Code2, Cpu, Settings, User, LogOut, ChevronDown, Activity, Zap, Shield, BarChart3, Terminal, Eye, Copy, Check, ExternalLink, Search, Bell, Command, Trash2, Rocket, GitHub, Link as LinkIcon } from 'lucide-react'
+import { X, Plus, Globe, Layout, FolderOpen, Code2, Cpu, Settings, User, LogOut, ChevronDown, Activity, Zap, Shield, BarChart3, Terminal, Eye, Copy, Check, ExternalLink, Search, Bell, Command, Trash2, Rocket, GitFork, Link as LinkIcon } from 'lucide-react'
 
 export function NewProjectModal({ open, onClose, onSubmit, onGitHubImport }: {
   open: boolean
@@ -98,7 +98,7 @@ export function NewProjectModal({ open, onClose, onSubmit, onGitHubImport }: {
               mode === 'github' ? 'border-white text-white' : 'border-transparent text-[#555555] hover:text-white'
             }`}
           >
-            <Github size={14} /> Import from GitHub
+            <GitFork size={14} /> Import from GitHub
           </button>
         </div>
 
@@ -107,7 +107,7 @@ export function NewProjectModal({ open, onClose, onSubmit, onGitHubImport }: {
             <div>
               <label className="block text-xs font-medium text-[#888888] mb-1.5">GitHub Repository URL</label>
               <div className="relative">
-                <Github size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#555555]" />
+                <GitFork size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#555555]" />
                 <input
                   type="text"
                   value={githubRepo}

@@ -15,6 +15,7 @@ import Settings from './pages/Settings'
 import Deployments from './pages/Deployments'
 import Logs from './pages/Logs'
 import EnvVars from './pages/EnvVars'
+import Templates from './pages/Templates'
 import './index.css'
 
 const queryClient = new QueryClient({
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/projects/new" element={<NewProject />} />
                 <Route path="/projects/:id" element={<ProjectDetail />} />
+                <Route path="/templates" element={<Templates />} />
                 <Route path="/deployments" element={<Deployments />} />
                 <Route path="/logs" element={<Logs />} />
                 <Route path="/env-vars" element={<EnvVars />} />

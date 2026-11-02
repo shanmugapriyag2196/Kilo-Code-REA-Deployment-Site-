@@ -2,15 +2,13 @@ import React, { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../lib/api'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Search, Trash2, Folder } from 'lucide-react'
+import { Plus, Search, Trash2, Folder, Rocket, Github } from 'lucide-react'
 import { useToast } from '../components/ToastProvider'
 import { ProjectCard } from '../components/ProjectCard'
-import { NewProjectModal } from '../components/NewProjectModal'
 import { ConfirmDialog } from '../components/ConfirmDialog'
 
 export default function Projects() {
   const [search, setSearch] = useState('')
-  const [showNew, setShowNew] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const { addToast } = useToast()
   const qc = useQueryClient()
@@ -69,10 +67,10 @@ export default function Projects() {
             />
           </div>
           <button
-            onClick={() => setShowNew(true)}
+            onClick={() => navigate('/templates')}
             className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-white text-black rounded-md hover:bg-gray-200 transition font-medium"
           >
-            <Plus size={14} /> New
+            <Plus size={14} /> Create New
           </button>
         </div>
       </div>
@@ -85,10 +83,10 @@ export default function Projects() {
           <h3 className="text-white font-medium mb-1">No projects yet</h3>
           <p className="text-sm text-[#555555] mb-4">Create your first project to get started</p>
           <button
-            onClick={() => setShowNew(true)}
+            onClick={() => navigate('/templates')}
             className="inline-flex items-center gap-1.5 px-4 py-2 text-sm bg-white text-black rounded-md hover:bg-gray-200 transition font-medium"
           >
-            <Plus size={14} /> New Project
+            <Plus size={14} /> Create New
           </button>
         </div>
       )}
@@ -105,13 +103,6 @@ export default function Projects() {
           />
         ))}
       </div>
-
-      <NewProjectModal
-        open={showNew}
-        onClose={() => setShowNew(false)}
-        onSubmit={(data) => createMutation.mutate(data)}
-        onGitHubImport={(repo, name) => api.post('/github', { repo, name })}
-      />
 
       <ConfirmDialog
         open={deleteId !== null}

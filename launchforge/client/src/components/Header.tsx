@@ -22,7 +22,7 @@ export function Header({ onNewProject, onSearch, searchQuery = '' }: HeaderProps
     '/settings': 'Settings',
   }
 
-  const title = titles[location.pathname] || 'LaunchForge'
+  const title = titles[location.pathname] || 'VG Deployment App'
 
   const handleCommandPalette = () => {
     addToast('Command palette coming soon', 'info')
@@ -31,7 +31,7 @@ export function Header({ onNewProject, onSearch, searchQuery = '' }: HeaderProps
   return (
     <header className="h-14 border-b border-[#222222] bg-black flex items-center px-4 gap-3 sticky top-0 z-20">
       <div className="flex items-center gap-2 text-sm text-[#888888]">
-        <Link to="/" className="hover:text-white transition">LaunchForge</Link>
+        <Link to="/" className="hover:text-white transition">VG Deployment App</Link>
         <span>/</span>
         <span className="text-white font-medium">{title}</span>
       </div>

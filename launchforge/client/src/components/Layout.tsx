@@ -9,6 +9,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     '/': 'Overview',
     '/projects': 'Projects',
     '/projects/new': 'New Project',
+    '/templates': 'Create New',
     '/deployments': 'Deployments',
     '/logs': 'Logs',
     '/env-vars': 'Environment Variables',
@@ -18,7 +19,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     '/settings': 'Settings',
   }
 
-  const title = titles[location.pathname] || 'LaunchForge'
+  const title = titles[location.pathname] || 'VG Deployment App'
 
   return (
     <div className="flex min-h-screen">

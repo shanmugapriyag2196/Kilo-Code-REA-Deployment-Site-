@@ -32,7 +32,7 @@ export default function Settings() {
             />
           </div>
           <p className="text-xs text-[var(--text-dim)]">
-            This is a local-only account placeholder. LaunchForge does not implement a production authentication system.
+            This is a local-only account placeholder. VG Deployment App does not implement a production authentication system.
           </p>
         </div>
       </div>
