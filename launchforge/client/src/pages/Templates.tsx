@@ -3,15 +3,17 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../lib/api'
 import { useToast } from '../components/ToastProvider'
-import { X, Rocket, GitFork, Globe, Layout, Code2, FileText, Cpu, FlaskConical, Bot, Activity, Zap, Eye } from 'lucide-react'
+import { GitFork, Bot, Activity, Layout, FlaskConical, FileText, Image, Gamepad2, Calculator, Mail } from 'lucide-react'
 
 const TEMPLATES = [
+  { key: 'contact-form', name: 'Contact Form', description: 'A simple contact form with name, email, and message fields', icon: Mail, framework: 'vite', color: 'from-[#00a3ff] to-[#0066ff]' },
+  { key: 'image-editor', name: 'Image Editor', description: 'Crop, resize, and filter images in the browser', icon: Image, framework: 'vite', color: 'from-[#a855f7] to-[#7c3aed]' },
+  { key: 'mini-game', name: 'Mini Game', description: 'A browser-based mini game built with HTML5 Canvas', icon: Gamepad2, framework: 'vite', color: 'from-[#ff6b6b] to-[#ee0979]' },
+  { key: 'finance-calculator', name: 'Finance Calculator', description: 'EMI, ROI, and compound interest calculator', icon: Calculator, framework: 'vite', color: 'from-[#00ff88] to-[#00a3ff]' },
   { key: 'agent', name: 'Build an agent', description: 'Deploy an agent in a minute on Vercel', icon: Bot, framework: 'vite', color: 'from-[#00a3ff] to-[#0066ff]' },
   { key: 'ticket-router', name: 'Ticket router with Jev', description: 'Route ticket submissions by context using Jev and AI SDK', icon: Activity, framework: 'vite', color: 'from-[#00ff88] to-[#00a3ff]' },
   { key: 'nextjs', name: 'Next.js Boilerplate', description: 'Get started with Next.js and React in seconds', icon: Layout, framework: 'next', color: 'from-white to-[#a3a3a3]' },
   { key: 'flask', name: 'Flask Python Boilerplate', description: 'Deploy Python Flask applications with zero configuration', icon: FlaskConical, framework: 'node', color: 'from-[#ffb020] to-[#ff6b00]' },
-  { key: 'analytics', name: 'Web Analytics', description: 'Track page views, events, and performance metrics', icon: Eye, framework: 'vite', color: 'from-[#a855f7] to-[#7c3aed]' },
-  { key: 'speed-insights', name: 'Speed Insights', description: 'Monitor Core Web Vitals and real user metrics', icon: Zap, framework: 'vite', color: 'from-[#00ff88] to-[#00a3ff]' },
   { key: 'empty', name: 'Empty project', description: 'Start from a blank canvas', icon: FileText, framework: 'static', color: 'from-[#222222] to-[#111111]' },
 ]
 
@@ -33,8 +35,8 @@ export default function Templates() {
   return (
     <div className="page-enter">
       <div className="mb-8">
-        <h2 className="text-3xl font-bold tracking-tight text-white">Templates</h2>
-        <p className="text-sm text-[#888888] mt-1">Choose a template or import from Git</p>
+        <h2 className="text-3xl font-bold tracking-tight text-white">Let's build something new</h2>
+        <p className="text-sm text-[#888888] mt-1">Ask v0 to build or enter a Git repository URL…</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
