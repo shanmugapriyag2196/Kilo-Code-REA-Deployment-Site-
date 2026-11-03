@@ -2,9 +2,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../lib/api'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Search, Trash2, Folder, FolderGit2, CheckCircle2, Clock, AlertCircle, ChevronRight } from 'lucide-react'
+import { Plus, Search, Trash2, Folder, FolderGit2, CheckCircle2, Clock, AlertCircle, ChevronRight, LayoutGrid, List, Filter } from 'lucide-react'
 import { useToast } from '../components/ToastProvider'
-import { ProjectCard } from '../components/ProjectCard'
 import { ConfirmDialog } from '../components/ConfirmDialog'
 
 export default function Projects() {
