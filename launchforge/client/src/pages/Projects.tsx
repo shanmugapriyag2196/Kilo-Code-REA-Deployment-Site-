@@ -12,7 +12,6 @@ export default function Projects() {
   const [frameworkFilter, setFrameworkFilter] = useState('All')
   const [statusFilter, setStatusFilter] = useState('All')
   const [deleteId, setDeleteId] = useState<string | null>(null)
-  const [selectedProject, setSelectedProject] = useState<any>(null)
   const { addToast } = useToast()
   const qc = useQueryClient()
   const navigate = useNavigate()
